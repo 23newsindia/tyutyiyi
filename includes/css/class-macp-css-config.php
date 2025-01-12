@@ -5,6 +5,7 @@ class MACP_CSS_Config {
         
         // Default WordPress classes that should never be removed
         $default_safelist = [
+            // WordPress defaults
             'wp-*',
             'admin-bar*',
             'dashicons*',
@@ -15,7 +16,42 @@ class MACP_CSS_Config {
             'sticky',
             'bypostauthor',
             'wp-caption*',
-            'gallery*'
+            'gallery*',
+            
+            // Font Awesome
+            'fa',
+            'fa-*',
+            'fas',
+            'far',
+            'fab',
+            'fal',
+            'fad',
+            
+            // Common responsive classes
+            'container*',
+            'row*',
+            'col-*',
+            'hidden-*',
+            'visible-*',
+            'd-*',
+            'flex-*',
+            'justify-*',
+            'align-*',
+            'order-*',
+            'offset-*',
+            'm-*',
+            'p-*',
+            'text-*',
+            'bg-*',
+            'w-*',
+            'h-*',
+            
+            // Media query related classes
+            '*-xs-*',
+            '*-sm-*',
+            '*-md-*',
+            '*-lg-*',
+            '*-xl-*'
         ];
 
         return array_merge($default_safelist, $saved_safelist);
@@ -26,7 +62,10 @@ class MACP_CSS_Config {
         
         $default_patterns = [
             'admin-bar.min.css',
-            'dashicons.min.css'
+            'dashicons.min.css',
+            'fontawesome',
+            'font-awesome',
+            'bootstrap'
         ];
 
         return array_merge($default_patterns, $saved_patterns);
