@@ -16,7 +16,13 @@ class MACP_Unused_CSS_Processor {
     private function filter_css($css, $used_selectors) {
         $filtered = '';
         
-        // Split CSS into rules
+        // Preserve @media queries and @font-face rules
+        preg_match_all('/@(media|font-face)[^{]*{[^}]*}/', $css, $matches);
+        if (!empty($matches[0])) {
+            $filtered .= implode("\n", $matches[0]) . "\n";
+        }
+        
+        // Split remaining CSS into rules
         preg_match_all('/([^{]+){[^}]*}/s', $css, $matches);
         
         foreach ($matches[0] as $rule) {
@@ -29,6 +35,11 @@ class MACP_Unused_CSS_Processor {
     }
 
     private function should_keep_rule($rule, $used_selectors) {
+        // Always keep @-rules
+        if (strpos($rule, '@') === 0) {
+            return true;
+        }
+
         $selectors = explode(',', trim(preg_replace('/\s*{.*$/s', '', $rule)));
         
         foreach ($selectors as $selector) {
@@ -41,6 +52,11 @@ class MACP_Unused_CSS_Processor {
             
             // Keep if used in HTML
             if ($this->is_selector_used($selector, $used_selectors)) {
+                return true;
+            }
+
+            // Keep Font Awesome related selectors
+            if ($this->is_font_awesome_selector($selector)) {
                 return true;
             }
         }
@@ -60,6 +76,16 @@ class MACP_Unused_CSS_Processor {
             }
         }
 
+        return false;
+    }
+
+    private function is_font_awesome_selector($selector) {
+        $fa_patterns = ['/\bfa-/', '/\bfas?\b/', '/\bfar\b/', '/\bfal\b/', '/\bfab\b/', '/\bfad\b/'];
+        foreach ($fa_patterns as $pattern) {
+            if (preg_match($pattern, $selector)) {
+                return true;
+            }
+        }
         return false;
     }
 
